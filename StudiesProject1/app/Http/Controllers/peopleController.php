@@ -6,7 +6,7 @@ use App\Models\PeopleModel;
 
 use Illuminate\Http\Request;
 
-class PersonController extends Controller
+class PeopleController extends Controller
 {
     public function index()
     {
@@ -26,7 +26,7 @@ class PersonController extends Controller
         return response()->json($element);
     }
 
-    public function store(Request $request)
+    public function post(Request $request)
     {
         $element = PeopleModel::create($request->all());
 
@@ -41,7 +41,7 @@ class PersonController extends Controller
             return response()->json(['error' => 'Person not found'], 204);
         }
 
-        $element->update($request->all());
+        $res=PeopleModel::where('ID',$id)->update($request->all());
 
         return response()->json($element);
     }
@@ -54,8 +54,11 @@ class PersonController extends Controller
             return response()->json(['error' => 'Person not found'], 204);
         }
 
-        $element->delete();
+        $res=PeopleModel::where('ID',$id)->delete();
 
-        return response()->json(['message' => 'Person deleted']);
+        if ($res)
+            return response()->json(['message' => 'Person deleted']);
+        else 
+            return response()->json(['error' => 'can not Person deleted']);
     }
 }
